@@ -38,7 +38,7 @@ loop:
     lw t0, 0(sp)     # recupera K da pilha
     lw t2, 4(sp)     # recupera source[K] da pilha
     addi sp, sp, 8   # apaga a pilha criada na linha 34.. Genial, não?
-    add t2, x0, a0   # t2 recebe o valor retornado de square (t2 deixa de representar source e passa a representar dest.. Genial, não?)
+    add t2, x0, a0   # t2 recebe o valor retornado de square (t2 deixa de representar source)
     add t3, s2, s3   # t3 recebe o ~ENDEREÇO~ de dest[K]
     sw t2, 0(t3)     # dest[K] = t2
     add s0, s0, t2   # Sum += t2   <interprete como quiser>   Sum += dest[K]
