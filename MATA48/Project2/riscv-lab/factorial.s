@@ -45,4 +45,4 @@ loop:
 exit:
     add a0, x0, t0   # Prepara o retorno de y
     add a1, x0, x0   # Limpa o registrador não usado no retorno
-    ecall # Terminate ecall
+    jr ra            # retorna o controle do processo
