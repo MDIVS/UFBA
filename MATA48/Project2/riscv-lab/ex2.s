@@ -27,23 +27,23 @@ main:
     la s2, dest      # s2 rebece o endereço de dest
 loop:
     slli s3, t0, 2   # s3 recebe K*4, a ideia é que cada unidade de K represente uma palavra... Genial, não?
-    add t1, s1, s3   # t1 recebe source+K*4, ou seja source[K]
-    lw t2, 0(t1)     # t2 recebe source[K]
+    add t1, s1, s3   # t1 recebe o ~ENDEREÇO~ de source+K*4, ou seja source[K]
+    lw t2, 0(t1)     # t2 recebe o  ~VALOR~   de source[K]
     beq t2, x0, exit # if (source[K]==0) exit;
     add a0, x0, t2   # a0 recebe source[K], a0 é o argumento x a ser passado para square
-    addi sp, sp, -8  # ?
-    sw t0, 0(sp)     # ?
-    sw t2, 4(sp)     # ?
-    jal square       # ?
-    lw t0, 0(sp)     # ?
-    lw t2, 4(sp)     # ?
-    addi sp, sp, 8   # ?
-    add t2, x0, a0   # ?
-    add t3, s2, s3   # ?
-    sw t2, 0(t3)     # ?
-    add s0, s0, t2   # ?
-    addi t0, t0, 1   # ?
-    jal x0, loop     # ?
+    addi sp, sp, -8  # define uma pilha com oito bits para fazer backup dos dados
+    sw t0, 0(sp)     # armazena K na pilha
+    sw t2, 4(sp)     # armazena source[K] na pilha
+    jal square       # chama a função square
+    lw t0, 0(sp)     # recupera K da pilha
+    lw t2, 4(sp)     # recupera source[K] da pilha
+    addi sp, sp, 8   # apaga a pilha criada na linha 34.. Genial, não?
+    add t2, x0, a0   # t2 recebe o valor retornado de square (t2 deixa de representar source e passa a representar dest.. Genial, não?)
+    add t3, s2, s3   # t3 recebe o ~ENDEREÇO~ de dest[K]
+    sw t2, 0(t3)     # dest[K] = t2
+    add s0, s0, t2   # Sum += t2   <interprete como quiser>   Sum += dest[K]
+    addi t0, t0, 1   # K++
+    jal x0, loop     # volta pro loop
 square:
     add t0, a0, x0   # t0 recebe x (veja a linha 33)
     add t1, a0, x0   # t1 recebe x
