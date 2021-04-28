@@ -21,4 +21,28 @@ main:
     ecall # Exit
 
 factorial:
-    # YOUR CODE HERE
+    # y = x--;
+    add t0, x0, a0
+    addi a0, a0, -1
+
+    # i = x;
+    add t1, x0, a0
+
+loop:
+    # if i==0: break
+    beq t1, x0, exit
+
+    # y *= x--;
+    mul t0, t0, a0
+    addi a0, a0, -1
+
+    # i--;
+    addi t1, t1, -1
+
+    # continue
+    jal x0, loop
+
+exit:
+    add a0, x0, t0   # Prepara o retorno de y
+    add a1, x0, x0   # Limpa o registrador não usado no retorno
+    ecall # Terminate ecall
