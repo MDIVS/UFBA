@@ -1,7 +1,11 @@
-#   NetworkX Tutorial
-#   Mohammad T. Irfan
-#   Bowdoin College
-import networkx as nx 
+#   Author:
+#           MDIVS (github.com/MDIVS)
+#   Description:
+#           This algorithm plots a graphical interface that
+#           displays the recursion tree of question 2 of
+#           week 2 of the Colab of MATA52 at UFBA in 2022.1
+
+import networkx as nx # biblioteca responsável por plotar o código 
 import matplotlib.pyplot as plt 
 import random 
 
