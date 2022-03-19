@@ -1,0 +1,1 @@
+2. Mostre a árvore de recursão e encontra os limites assintóticos da relação de recorrência $T(n) = 3T(n/4)+n$. Para verificar a correção da sua resposta, use o método de substituição:
