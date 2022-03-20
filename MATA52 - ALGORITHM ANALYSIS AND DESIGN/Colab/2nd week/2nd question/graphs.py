@@ -6,93 +6,75 @@
 #           week 2 of the Colab of MATA52 at UFBA in 2022.1
 
 import networkx as nx # biblioteca responsável por plotar o código 
-import matplotlib.pyplot as plt 
-import random 
+import matplotlib.pyplot as plt
 
-#Create an empty undirected graph
+# Create an empty undirected graph
 G = nx.Graph() #nx.DiGraph() for directed graph
+graph_labels = {} # This dictionary will store the node names for visualization
 
-#Add nodes
-G.add_node(0)
-G.add_nodes_from( [1, 2, 3] ) #Can also use range(...)
+recursion_data = {
+    'times' : 2,
+    'tree_level': 0,
+    'nodes': 0
+}
 
-#Add edges
-G.add_edge(0,1)
-G.add_edges_from( [ (1,2), (2,3), (3,1) ] ) #from file?
+def recursion(data, node_id, position):
+    if data['times'] == data['tree_level']:
+        return # limit the amount of times we create nodes
+    
+    data['tree_level'] += 1 # LEVELING TREE UP
 
-print("Number of nodes =", G.number_of_nodes())
-print("Number of edges =", G.number_of_edges())
+    for i in range(0,3):
+        new_node_id = data['nodes']
+        node_name = 'c(n/'+str(4**data['tree_level'])+')'
 
-#Views
-print("G.nodes =", G.nodes)
-print("G.edges =", G.edges)
-print("G.degree =", G.degree)
-print("G.adj =", G.adj)
+        progress = data['tree_level']/data['times']
+        position_alignment_factor = data['times']-progress*1.7 # this parameter will help to organize nodes by position
+        node_position = (position[0]+i*position_alignment_factor-position_alignment_factor,position[1]-1) # node position calculated based in the parent node position and position alignment factor of this tree level
 
-#Add attributes to nodes
-for i in G.nodes: # #1 most widely used graph operation
-    G.nodes[i]['smoking'] = False
-    G.nodes[i]['weight'] = random.choice(range(100,200))
-G.nodes[1]['smoking'] = True
-print("G.nodes.data():", G.nodes.data())
+        G.add_node(new_node_id, size=2000, pos=node_position, name = node_name)
+        G.add_edge(node_id,new_node_id)
+        graph_labels[new_node_id] = node_name
+        data['nodes'] += 1
+        recursion(data, new_node_id, node_position)
 
-#Add attributes to edges
-for e in G.edges: #also widely used operation 
-    G.edges[e]['strength'] = round(random.random(), 2)
-print("G.edges.data():", G.edges.data())
-print("G.adj:", G.adj)
+    data['tree_level'] -= 1 # COMMING BACK TREE DOWN
 
+# Add nodes for level 0
+no_id : int = recursion_data['nodes']
+no = G.add_node(no_id, size=640, pos=(0,0))
+graph_labels[no_id] = 'cn'
+recursion_data['nodes'] += 1
 
-#3 ways of iterating over the neighbors of a node
-# #2 most widely used operation in graphs
-print("Using G.adj[2]:")
-for nbr in G.adj[2]:
-    print(nbr)
+recursion(recursion_data, no_id, (0,0))
 
-print("Using G[2]:")
-for nbr in G[2]:
-    print(nbr)
+# print("Number of nodes =", G.number_of_nodes())
+# print("Number of edges =", G.number_of_edges())
 
-print("Using G.neighbors(2):")
-for nbr in G.neighbors(2):
-    print(nbr)
+# #Views
+# print("G.nodes =", G.nodes)
+# print("G.edges =", G.edges)
+# print("G.degree =", G.degree)
+# print("G.adj =", G.adj)
 
-
-#Color nodes and visualize network
-plt.figure(1)
-#Simple 1-line code: nx.draw_networkx(G)
+# Color nodes and visualize network
+plt.figure(1, figsize=(10,4))
 color_map = []
 size_map = []
+pos_dict = {}
 for i in G.nodes:
-    size_map.append(G.nodes[i]['weight']*2)
-    if G.nodes[i]['smoking']:
-        color_map.append('red')
-    else:
-        color_map.append('green')
-nx.draw_networkx( G, 
-        node_color=color_map, 
-        node_size=size_map, 
-        pos=nx.spring_layout(G, iterations=1000), 
-        arrows=False, with_labels=True )
-plt.show()
+    size_map.append(G.nodes[i]['size'])
+    color_map.append('green')
+    pos_dict[i] = G.nodes[i]['pos']
 
-
-#Erdos-Renyi random graph & degree distribution
-plt.figure(2)
-G_Erdos = nx.erdos_renyi_graph(1000, 0.1)
-degrees = [G_Erdos.degree[i] for i in G_Erdos.nodes]
-plt.xlabel('k')
-plt.ylabel('p_k')
-plt.title('Degree Distribution (Erdos-Renyi)')
-plt.hist(degrees, bins = range( min(degrees), max(degrees) ) )
-
-#Barabasi-Albert preferential attachment graph & degree distribution
-plt.figure(3)
-G_Barabasi = nx.barabasi_albert_graph(1000, 3)
-degrees = [G_Barabasi.degree[i] for i in G_Barabasi.nodes]
-plt.xlabel('k')
-plt.ylabel('p_k')
-plt.title('Degree Distribution (Barabasi-Albert)')
-plt.hist(degrees, bins = range( min(degrees), max(degrees) ) )
+nx.draw_networkx(
+    G, 
+    node_color=color_map, 
+    node_size=size_map,
+    labels=graph_labels,
+    pos = pos_dict,
+    # pos=nx.spring_layout(G, iterations=1000), 
+    arrows=False, with_labels=True
+)
 
 plt.show()
