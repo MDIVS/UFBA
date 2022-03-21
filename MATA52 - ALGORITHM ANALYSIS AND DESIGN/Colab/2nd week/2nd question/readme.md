@@ -39,3 +39,25 @@ Portanto, os custos somados por todos os níveis deve ser dado pela fórmula:
 $T(n) = cn + 3/16cn + (3/16)^2cn + ... + (3/16)^{\log _4 n-1}cn + \theta(n^{\log _4 3})
 \\ = \sum_{i=0}^{\log _4 n-1} (3/16)^icn + \theta(n^{\log _4 3})
 \\ = ((3/16)^{\log _4 n}-1)/(3/16) \ cn  + \theta(n^{\log _4 3})$
+
+**Limite assintótico**
+
+Por ser uma série geométrica podemos tirar proveito utilizando uma série geométrica decrescente infinita como limite superior, sendo assim:
+
+$T(n) = \sum_{i=0}^{\log _4 n-1} (\frac{3}{16})^icn + \Theta(n^{\log _4 3}) < 
+\sum_{i=0}^{∞} (\frac{3}{16})^icn + \Theta(n^{\log _4 3})
+\\ = \frac{1}{1-(3/16)}cn + \Theta(n^{\log _4 3})
+\\ = \frac{16}{13}cn + \Theta(n^{\log _4 3})
+\\ = \frac{1}{1-(3/16)}cn + \Theta(n^{\log _4 3})
+\\ = O(n)$
+
+Os coeficientes de $cn$ formam uma série geométrica decrescente e a soma desses coeficientes é limitada superiormente pela constante $\frac{16}{13}$. A contribuição da raiz para o custo total é $cn$, a raiz contribui com uma fração constante de custo total, ou seja, o custo da raiz domina o custo total da árvore.
+
+**Método da substituição**
+
+Vamos utilizar o método da substituição para verificar nosso palpite de $T(n) = O(n)$ é limite superior para a recorrência $T(n) = 3T(n/4)+n$, queremos mostrar que $T(n) \leq kn$ para algum $k>0$. Tomando uma constante $c>0$, temos
+
+$T(n) \leq 3T(n/4)+cn$ \\
+$\leq 3k(n/4)+cn$ \\
+$= \frac{16}{13}kn + cn$ \\
+$\leq kn$, onde esta é válida para $k \geq (\frac{16}{13})c$
